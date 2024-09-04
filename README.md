@@ -26,10 +26,16 @@ This project utilizes the following components:
 A Docker Compose file is provided to run the application in a Docker environment. Use the following command to start Docker Compose and set up the necessary environment:
 
 ```bash 
-docker-compose up --build -d --remove-orphans
+docker-compose --file docker-compose.yml -p xmlcalendar up  --build -d --remove-orphans
 ```
 
 ### Useful commands 
+
+* To run dev services such as database and message broker ( RabbitMQ )
+
+```bash 
+docker-compose --file xmlcalendar-dev-services.yml -p xmlcalendar-dev-services up --build -d --remove-orphans
+```
 
 * To build project
 
