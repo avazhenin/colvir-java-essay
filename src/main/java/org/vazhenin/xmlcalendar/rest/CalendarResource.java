@@ -34,9 +34,10 @@ public class CalendarResource {
     @Autowired
     SyncronizeCalendar syncronizeCalendar;
 
-    @GetMapping("/{language}/{year}/calendar.xml")
-    public Optional<String> getCalendar(Language language, String year) {
-        return calendarService.getCalendar(language, year);
+    @GetMapping
+    public Optional<String> getCalendar(@BindParam("language") String language, @BindParam("year") String year) {
+        log.infof("REST api request to /calendar language=%s, year=%s", language, year);
+        return calendarService.getCalendar(Language.valueOf(language.toUpperCase()), year);
     }
 
     @PostMapping("/forceUpdate")
