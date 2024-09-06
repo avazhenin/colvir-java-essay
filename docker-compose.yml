@@ -1,0 +1,81 @@
+services:
+  calendar-service:
+    container_name: "calendar"
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8880:8880"
+    environment:
+      - spring.datasource.url=jdbc:postgresql://db:5432/calendar_db
+      - spring.datasource.username=admin
+      - spring.datasource.password=admin
+      - spring.rabbitmq.host=rabbitmq
+      - spring.rabbitmq.username=admin
+      - spring.rabbitmq.password=admin
+      - update.calendar.scheduler=0 * * * * *
+    depends_on:
+      - db
+      - rabbitmq
+      - prometheus
+      - grafana
+    networks:
+      - monitoring
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: calendar_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5432:5432"
+    networks:
+      - monitoring
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./rabbitmq:/var/lib/rabbitmq
+    networks:
+      - monitoring
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - monitoring
+    restart: always
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - monitoring
+    restart: always
+    volumes:
+      - grafana-storage:/var/lib/grafana
+
+networks:
+  monitoring:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  grafana-storage:
