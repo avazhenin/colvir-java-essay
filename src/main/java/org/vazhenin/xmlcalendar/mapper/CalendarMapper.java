@@ -6,7 +6,7 @@ import org.vazhenin.xmlcalendar.domain.Calendar;
 import org.vazhenin.xmlcalendar.dto.CalendarDto;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-public interface CalendarMapper extends EntityMapper<CalendarDto, Calendar> {
+interface CalendarMapper extends EntityMapper<CalendarDto, Calendar> {
     @Override
     Calendar toEntity(CalendarDto dto);
 

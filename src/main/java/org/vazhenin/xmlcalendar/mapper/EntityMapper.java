@@ -5,7 +5,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
-public interface EntityMapper<D, E> {
+interface EntityMapper<D, E> {
     E toEntity(D dto);
 
     D toDto(E entity);
