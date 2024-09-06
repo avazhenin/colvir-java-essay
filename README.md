@@ -21,6 +21,7 @@ This project utilizes the following components:
 
 ### Features
 * **Simultaneous Calendar Updates** - Calendar update requests for each year are processed in parallel.
+* **Application monitoring ( _Grafana and Prometheus_ )**
 
 ### Additional Requirements
 A Docker Compose file is provided to run the application in a Docker environment. Use the following command to start Docker Compose and set up the necessary environment:
@@ -34,7 +35,7 @@ docker-compose --file docker-compose.yml -p xmlcalendar up  --build -d --remove-
 * To run dev services such as database and message broker ( RabbitMQ )
 
 ```bash 
-docker-compose --file xmlcalendar-dev-services.yml -p xmlcalendar-dev-services up --build -d --remove-orphans
+docker-compose --file docker-compose-dev -p xmlcalendar-dev-services up --build -d --remove-orphans
 ```
 
 * To build project
@@ -131,3 +132,13 @@ curl -X GET "http://localhost:8880/calendar/lastUpdated"
 # 5. Get Calendar Statistics
 curl -X GET "http://localhost:8880/calendar/statistic?year=2024"
 ```
+
+
+### Application monitoring ( Grafana and Prometheus )
+In order to monitor application, you need to perform following steps
+  - run docker-compose.yml file as described in the corresponding section
+    - Make sure all containers run without errors.
+  - access Grafana at http://localhost:3000/dashboards
+    - create Prometheus data source. Specify http://prometheus:9090 in server URL
+    - create Dashboard. Use import JSON from spring-boot-monitoring.json and selected prometheus datasource
+    - Open Spring Boot 2.1 System Monitor dashboard
